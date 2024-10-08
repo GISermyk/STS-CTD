@@ -6,7 +6,6 @@ You can run output_demo.py to visualize the output of the STS-CTD model. The tra
 ![liuchengtu](https://github.com/user-attachments/assets/3d7c6b7a-eebf-463f-8253-5a5bc38e43a6)
 Fig.1 The framework of STS-CTD model
 
-S. alterniflora removal timing mapping:
 ![Fig 13](https://github.com/user-attachments/assets/f7d3f95d-2f03-473f-bd53-7a538138a4a6)
 
 Fig. 2. Maps of S. alterniflora removal status and removal timing in China coastal wetlands. Zoom-in maps in (a) Yellow River Estuary, Shandong; (b) Yancheng city, Jiangsu; (c) Chongming Island, Shanghai; (d) Hangzhou Bay, Zhejiang; (e) Sanmen Bay, Zhejiang; (f) Leqing Bay, Zhejiang; (g-h) Sansha Bay, Fujian; (i) Dingzi Port, Shandong; (j) Zhangjiang Estuary, Fujian.
