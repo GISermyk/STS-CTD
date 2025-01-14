@@ -15,4 +15,4 @@ Fig. 2. Maps of S. alterniflora removal status and removal timing in China coast
 
 ![Figure14](https://github.com/user-attachments/assets/dcc2bc48-7f2e-4b94-b2a6-9f3dfdba0c01)
 
-Zoomed-in maps of removal extent and timing (left column) and the corresponding time series Sentinel 1 GRD false-color composition (σ^VH, σ^VV, CR) images (second to last column). The locations of (a)-(f) are illustrated in ①-⑥ in Fig. 13.
+Fig.3. Zoomed-in maps of removal extent and timing (left column) and the corresponding time series Sentinel 1 GRD false-color composition (σ^VH, σ^VV, CR) images (second to last column). The locations of (a)-(f) are illustrated in ①-⑥ in Fig. 2.
