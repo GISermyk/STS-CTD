@@ -125,8 +125,8 @@ def main(device, save_condition, params_path, input_path):
 
 if __name__ == "__main__":
     
-    params_path = 'E:/min/detection2/model_params/paramsE8_b512.py'
-    train_path = 'E:/Sentinel-SAR/Train_data_all/HB_SD_JS_SH_ZJ_FJ_GX_train_data7.tif'
+    params_path = 'E:/min/detection2/model_params/STSCTD_128_L6_ggg.py'
+    train_path = 'E:/Sentinel-SAR/Train_data_all/train_data7.tif'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     try:
