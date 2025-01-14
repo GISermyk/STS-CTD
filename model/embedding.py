@@ -25,14 +25,14 @@ class TokenEmbedding(nn.Module):
     
         
 class PositionalEncoding(nn.Module):
-    """位置编码"""
+    """Position Encoding"""
     def __init__(self, d_model, max_len=200):
         super(PositionalEncoding, self).__init__()
         #self.dropout = nn.Dropout(dropout)
         
         self.num_hiddens = d_model + (d_model % 2)*1 
         
-        # 创建一个足够长的P
+        # create P
         self.P = torch.zeros((1, max_len, self.num_hiddens))
         X = torch.arange(max_len, dtype=torch.float32).reshape(
             -1, 1) / torch.pow(10000, torch.arange(0, self.num_hiddens, 2, dtype=torch.float32) / self.num_hiddens)
