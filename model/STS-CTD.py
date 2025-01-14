@@ -59,7 +59,7 @@ class Muti_kernel_conv1d(nn.Module):
 
 
 
-class Transformer_MKConv1d2(nn.Module):
+class STSCDT(nn.Module):
     """
         Args:
             d_model: Input feature dimension.
@@ -73,7 +73,7 @@ class Transformer_MKConv1d2(nn.Module):
             seq_len: Sequence length.
     """
     def __init__(self, d_model, d_k, heads, dropout, norm_shape, num_encode,  ff_h, conv_channels, seq_len, bandDropout):
-        super(Transformer_MKConv1d2, self).__init__()    
+        super(STSCDT, self).__init__()    
 
         self.seq_len = seq_len
         self.embedding = nn.Linear(6, d_model)
