@@ -1,4 +1,5 @@
 
+
 from typing import Any
 import torch 
 import os
@@ -8,7 +9,7 @@ import torch.nn as nn
 import pandas as pd
 from torch.nn import functional as F
 from torch.utils.data import Dataset
-from deeplearning.embedding import DataEmbedding
+#from deeplearning.embedding import DataEmbedding
 import rioxarray as rxr
 import xarray as xr
 from osgeo import gdal, osr
@@ -48,17 +49,21 @@ def load_train_data(PATH, seq_len, dim_num):
 
     return _data # shape: [batch_num, seq_len * dim_num + 1]
 
-    
-
 def one_hot_encode(labels, num_classes):
     """
     """
     # 使用torch.eye创建单位矩阵，并将对角线元素设为1，其他元素设为0
     eye_matrix = torch.eye(num_classes)
-    eye_matrix[0] = 1/num_classes # 将第一行（索引为0）设为1，即对应标签为0的行设为全零
-    eye_matrix[0][0] = 1
-    # eye_matrix[0] = 1/(2*num_classes)
-    # eye_matrix[0][0] = 0.5
+    
+    #-----------------origin--------------------
+    # eye_matrix[0] = 1/num_classes # 将第一行（索引为0）设为1，即对应标签为0的行设为全零
+    # eye_matrix[0][0] = 1
+    #--------------------------------------------
+    # eye_matrix[0] = 1/10*(num_classes-1) # 将第一行（索引为0）设为1，即对应标签为0的行设为全零
+    # eye_matrix[0][0] = 9/10
+    
+    eye_matrix[0] = 1/(2*(num_classes-1))
+    eye_matrix[0][0] = 0.5
     # 使用索引操作获取对应的独热编码
     one_hot_encoded = eye_matrix[labels]
 
@@ -94,24 +99,13 @@ def load_train_data2(PATH, seq_len, dim_num):
     
     return x_data, y_one_hot, non_negetive_indices
 
-###################################################################################
+#---------------------------------------------------------------------------
 # ablation test for feature bands -----  0:VV 1:VH 2:RVI 3:DPSVI 4:CR 5:DPRVIs
 def load_train_data3(PATH, seq_len, dim_num, is_remove_band, target_band):
     
     #dim_num = 6
     precipitation_data = rxr.open_rasterio(PATH).values
     
-    
-    #################### for two band #######################
-    # if is_remove_band:
-    #     if target_band == 0:
-    #         label = precipitation_data[-1].reshape(1, precipitation_data.shape[1], precipitation_data.shape[2])
-    #         print('label shape', label.shape)
-    #         precipitation_data = np.delete(precipitation_data, np.s_[target_band::6], axis=0)
-    #         precipitation_data = np.concatenate((precipitation_data, label), axis = 0)
-    #     else:
-    #         precipitation_data = np.delete(precipitation_data, np.s_[target_band::6], axis=0)
-    ########################################################
     
     if is_remove_band:
         if target_band == 0:
@@ -161,8 +155,7 @@ def load_train_data3(PATH, seq_len, dim_num, is_remove_band, target_band):
     print('x_data.shape :', x_data.shape)
     
     return x_data, y_one_hot, non_negetive_indices
-#######################################################################################
-
+#---------------------------------------------------------------------------
 def Normalization(x_feature):
     
     mean = np.mean(x_feature.numpy(), axis=2).reshape(x_feature.shape[0], x_feature.shape[1], 1)
@@ -286,7 +279,6 @@ def split_multiband_image_with_geo(input_image_path, output_path, block_size):
 
     dataset = None
 
-
 def get_result(input_path, row, col, net, param_path, device, is_remove_band, target_band):
 
     #open image
@@ -317,25 +309,26 @@ def get_result(input_path, row, col, net, param_path, device, is_remove_band, ta
             z = np.delete(z, np.s_[target_band::6], axis=0)
         zz = z[:z.shape[0]-1,row[0]:row[1],col[0]:col[1]]
         
-    print('z.shape',z.shape)
+    #print('z.shape',z.shape)
 
  
     #
     shape = zz.shape
-    print(zz.shape)
+    #print(zz.shape)
     b = torch.tensor(zz).permute(1,2,0)
     c = b.reshape(-1,b.shape[2])
     x_feature = c.reshape(c.shape[0], 27 ,-1).permute(0,2,1)
-    print('d.shape:',x_feature.shape)
+    #print('d.shape:',x_feature.shape)
 
     #normalization
     mean = np.mean(x_feature.numpy(), axis=2).reshape(x_feature.shape[0], x_feature.shape[1], 1)
     std = np.std(x_feature.numpy(), axis=2).reshape(x_feature.shape[0], x_feature.shape[1], 1)
     x_norm = (x_feature - mean)/(std)
-
+    
     #load net
-    net.load_state_dict(torch.load(param_path), strict= False)
-
+    state_dict = torch.load(param_path, map_location=device)
+    net.load_state_dict(state_dict, strict= False)
+    
     result = net((x_norm.float()).to(device))
     result = result.squeeze(1)
     result = torch.argmax(result, dim=1)
@@ -371,7 +364,7 @@ def Accuarcy_percise(input_path, target_result, average, name, is_output, filena
     print(conf_matrix)
     if is_output:
         conf_df = pd.DataFrame(conf_matrix)
-        excel_file = f"C:/Users/minyu/Desktop/accuracy/paramE8_L8_{filename}_confusion_matrix.xlsx"
+        excel_file = f"C:/Users/minyu/Desktop/New_map/STSCDT_{filename}_confusion_matrix.xlsx"
         conf_df.to_excel(excel_file, index=False)
 
         print(f"Confusion matrix saved to {excel_file}.")
@@ -387,7 +380,6 @@ def count_tif_files(folder_path):
         if filename.endswith('.tif'):
             tif_count += 1
     return tif_count
-
 
 def combine_train_data(output_path, path_first, *PATHs):
 
