@@ -71,6 +71,7 @@ class STSCDT(nn.Module):
             ff_h: Hidden size of feed-forward layers.
             conv_channels: List of integers defining the channel sizes for the multi-kernel convolutional layers.
             seq_len: Sequence length.
+            bandDropout: BandDropout rate (Training:0.2)
     """
     def __init__(self, d_model, d_k, heads, dropout, norm_shape, num_encode,  ff_h, conv_channels, seq_len, bandDropout):
         super(STSCDT, self).__init__()    
