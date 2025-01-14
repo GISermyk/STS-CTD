@@ -55,7 +55,7 @@ def main(device, save_condition, params_path, input_path):
     # net = transformer_mlp(d_model = 7, d_k=7, heads=4,dropout=0.5, norm_shape=[27,7], ff_h=14,
     #                           num_encode= 4, mlp_h=21, mlp_h2=7).to(device)                           
 
-    net = STSCDT(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
+    net = STSCTD(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
                                          ff_h= 256, conv_channels = [128, 64, 32, 16, 1], seq_len = 27, Banddropout = 0.2).to(device), 
     # net = Transformer_Muti_kernel_Conv1d(d_model = 2, d_k= 2, heads = 8, dropout = 0.5, norm_shape = [27,2], num_encode = 8,
     #                                      ff_h= 12, C1_h = 48, C1_h2 = 12, C1_h3= 6, seq_len = 27).to(device)
