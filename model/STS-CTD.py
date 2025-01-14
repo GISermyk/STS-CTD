@@ -59,7 +59,7 @@ class Muti_kernel_conv1d(nn.Module):
 
 
 
-class STSCDT(nn.Module):
+class STSCTD(nn.Module):
     """
         Args:
             d_model: Input feature dimension.
@@ -74,7 +74,7 @@ class STSCDT(nn.Module):
             bandDropout: BandDropout rate (Training:0.2)
     """
     def __init__(self, d_model, d_k, heads, dropout, norm_shape, num_encode,  ff_h, conv_channels, seq_len, bandDropout):
-        super(STSCDT, self).__init__()    
+        super(STSCTD, self).__init__()    
 
         self.seq_len = seq_len
         self.embedding = nn.Linear(6, d_model)
