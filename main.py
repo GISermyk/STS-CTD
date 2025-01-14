@@ -25,16 +25,11 @@ def main(device, save_condition, params_path, input_path):
 
     x_feature, y_one_hot,_ = load_train_data2(input_path, 27, 6)
     
-    ####  ablation test for feature bands -----  0:VV 1:VH 2:RVI 3:DPSVI 4:CR 5:DPRVIs  ######
+    #----------------  ablation test for feature bands - 0:VV 1:VH 2:RVI 3:VDDPI 4:CR 5:DPRVIs -------------------
+    
     # x_feature, y_one_hot,_ = load_train_data3(input_path, 27, 2, is_remove_band=True, target_band = 'vvhh_except')
     
-    ###########################################################
-    
-    # x_feature, y_one_hot ,_ = load_train_data2(path_1st, 27, 6)
-    # for path in paths:
-    #     x_feature1, y_one_hot1 ,_ = load_train_data2(path, 27, 6)
-    #     x_feature = torch.cat([x_feature, x_feature1], dim = 0)
-    #     y_one_hot = torch.cat([y_one_hot, y_one_hot1], dim = 0)
+    #------------------------------------------------------------------------------------------------------------
     
     sample_num = x_feature.shape[0]
 
