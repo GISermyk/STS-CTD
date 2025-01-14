@@ -27,7 +27,7 @@ def main(device, save_condition, params_path, input_path):
     
     #----------------  ablation test for feature bands - 0:VV 1:VH 2:RVI 3:VDDPI 4:CR 5:DPRVIs -------------------
     
-    # x_feature, y_one_hot,_ = load_train_data3(input_path, 27, 2, is_remove_band=True, target_band = 'vvhh_except')
+    # x_feature, y_one_hot,_ = load_train_data3(input_path, 27, 5, is_remove_band=True, target_band = 0)
     
     #------------------------------------------------------------------------------------------------------------
     
@@ -55,8 +55,8 @@ def main(device, save_condition, params_path, input_path):
     # net = transformer_mlp(d_model = 7, d_k=7, heads=4,dropout=0.5, norm_shape=[27,7], ff_h=14,
     #                           num_encode= 4, mlp_h=21, mlp_h2=7).to(device)                           
 
-    net = Transformer_Muti_kernel_Conv1d(d_model = 6, d_k= 6, heads = 8, dropout=0.5, norm_shape = [27,6], num_encode = 8,
-                                         ff_h= 12, C1_h = 48, C1_h2 = 12, C1_h3= 6, seq_len = 27).to(device)
+    net = STSCDT(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
+                                         ff_h= 256, conv_channels = [128, 64, 32, 16, 1], seq_len = 27, Banddropout = 0.2).to(device), 
     # net = Transformer_Muti_kernel_Conv1d(d_model = 2, d_k= 2, heads = 8, dropout = 0.5, norm_shape = [27,2], num_encode = 8,
     #                                      ff_h= 12, C1_h = 48, C1_h2 = 12, C1_h3= 6, seq_len = 27).to(device)
     # net = Transformer_Muti_kernel_Conv1d(d_model = 6, d_k= 6, heads = 8, dropout=0.5,shape = [27,6], num_encode = 8,
@@ -83,11 +83,12 @@ def main(device, save_condition, params_path, input_path):
     
     #optimizer = torch.optim.Adam(net.parameters(), lr = 0.005)
     optimizer = torch.optim.Adam(net.parameters(), lr = 0.001)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size = 20, gamma = 0.5)
     #optimizer = torch.optim.Adam(net.parameters(), lr = 0.0005)
     #optimizer = torch.optim.Adam(net.parameters(), lr = 0.01)
     criterion = torch.nn.MSELoss()
 
-
+    is_StepLR = True
     train_epoch_loss = []
     
     for e, epoch in enumerate(range(800)):
@@ -96,14 +97,19 @@ def main(device, save_condition, params_path, input_path):
         l_train = train_epoch(net, train_dl, device=device, optimizer = optimizer, 
                               criterion = criterion)
         train_loss.append(l_train)
-        
-        if e % 40 == 0:
+
+        if is_StepLR:
+            scheduler.step()
+            
+        epoch_mean_loss = np.mean(train_loss)
+        if e % 20 == 0:
+            
             with torch.no_grad():
                 
-                print("Epoch {}: Train loss={} \t ".format(e,np.mean(train_loss)))
+                print(f"Epoch {e}: Train loss = {epoch_mean_loss:.6f}")
                 
-                train_epoch_loss.append(np.mean(train_loss))
-    
+        train_epoch_loss.append(epoch_mean_loss)
+        
      # Save model
     if save_condition:
         
