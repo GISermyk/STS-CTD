@@ -55,15 +55,8 @@ def one_hot_encode(labels, num_classes):
     # 使用torch.eye创建单位矩阵，并将对角线元素设为1，其他元素设为0
     eye_matrix = torch.eye(num_classes)
     
-    #-----------------origin--------------------
-    # eye_matrix[0] = 1/num_classes # 将第一行（索引为0）设为1，即对应标签为0的行设为全零
-    # eye_matrix[0][0] = 1
-    #--------------------------------------------
-    # eye_matrix[0] = 1/10*(num_classes-1) # 将第一行（索引为0）设为1，即对应标签为0的行设为全零
-    # eye_matrix[0][0] = 9/10
-    
-    eye_matrix[0] = 1/(2*(num_classes-1))
-    eye_matrix[0][0] = 0.5
+    eye_matrix[0] = 1/(num_classes-1)
+    eye_matrix[0][0] = 1
     # 使用索引操作获取对应的独热编码
     one_hot_encoded = eye_matrix[labels]
 
