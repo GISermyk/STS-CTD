@@ -10,7 +10,7 @@ from torch.nn import functional as F
 from torch.utils.data import Dataset
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
-from detection2.deeplearning.embedding import TokenEmbedding, DataEmbedding
+from deeplearning.embedding import TokenEmbedding#, DataEmbedding
 
 
 import math
@@ -30,8 +30,6 @@ class ScaledDotProductAttention(nn.Module):
         value = torch.matmul(self.dropout(attn), V)
         return value, attn
         
-
-
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, d_k, heads, dropout):
         super(MultiHeadAttention, self).__init__()
@@ -136,5 +134,3 @@ class TransformerModel(nn.Module):
         # Concatenate layer outputs along the feature dimension
         concatenated_outputs = torch.cat(layer_outputs, dim=-1)
         return concatenated_outputs
-
-# mutiheadAttention + addNorm + FFt + addNorm
