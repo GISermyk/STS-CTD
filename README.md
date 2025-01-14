@@ -1,7 +1,7 @@
 
 Monitoring Spartina Alterniflora removal dynamics across coastal China using time series Sentinel-1 imagery
 
-You can run output_demo.py to visualize the output of the STS-CTD model. The trained model is saved under the model_data folder. Please note that this model parameters is only valid in the research area specified in the paper.
+You can run Run_result.py to visualize the output of the STS-CTD model. The trained model is saved under the model_data folder. Please note that this model parameters is only valid in the research area specified in the paper.
 
 ![Figure4](https://github.com/user-attachments/assets/a6c47cea-9ef7-498f-8a02-b25c35bd55a7)
 Fig.1 The framework of STS-CTD model
