@@ -50,27 +50,23 @@ def main(device, save_condition, params_path, input_path):
                           shuffle = True,
                           generator = torch.Generator(device='cpu'))
     
-    ## **************************** load model ****************************************
-
-    # net = transformer_mlp(d_model = 7, d_k=7, heads=4,dropout=0.5, norm_shape=[27,7], ff_h=14,
-    #                           num_encode= 4, mlp_h=21, mlp_h2=7).to(device)                           
+    #- ------------------------------------- load model -------------------------------------                    
 
     net = STSCTD(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
                                          ff_h= 256, conv_channels = [128, 64, 32, 16, 1], seq_len = 27, Banddropout = 0.2).to(device), 
-    # net = Transformer_Muti_kernel_Conv1d(d_model = 2, d_k= 2, heads = 8, dropout = 0.5, norm_shape = [27,2], num_encode = 8,
-    #                                      ff_h= 12, C1_h = 48, C1_h2 = 12, C1_h3= 6, seq_len = 27).to(device)
+
+    # net = Transformer(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
+    #                                      ff_h= 256, mlp1 = 256, mlp2 = 128, seq_len = 27).to(device), 
+    # net = Transformer_SKconv1d(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
+    #                                     ff_h= 256, conv_channels = [128, 64, 32, 16, 1], seq_len = 27, Banddropout = 0.2).to(device)
     # net = Transformer_Muti_kernel_Conv1d(d_model = 6, d_k= 6, heads = 8, dropout=0.5,shape = [27,6], num_encode = 8,
     #                                      ff_h= 12, C1_h = 48, C1_h2 = 12,  norm_C1_h3= 6, seq_len = 27).to(device)
-    
-    # net = Transformer_Muti_kernel_Conv1d(d_model = 6, d_k=6, heads = 12, dropout=0.5, norm_shape = [27,6], num_encode = 8,
-    #                                      ff_h= 12, C1_h = 24, C1_h2 = 12, C1_h3= 6, seq_len = 27).to(device) 
-    # net = Transformer_Muti_kernel_Conv1d(d_model = 6, d_k=6, heads = 8, dropout=0.5, norm_shape = [27,6], num_encode = 8,
-    #                                     ff_h= 12, C1_h = 48, C1_h2 = 12, C1_h3 = 6, seq_len = 27).to(device)
-    
-    # net = Transformer_Muti_kernel_Conv1d_DP(d_model = 6, d_k=6, heads = 8, dropout=0.5, norm_shape = [27,6], num_encode = 8,
-    #                                         ff_h= 12, C1_h = 48, C1_h2 = 12, C1_h3 = 6, seq_len = 27).to(device)
-    # net = transformer_mlp(d_model=6, d_k=6, heads=8, dropout=0.5, norm_shape=[27,6], num_encode=8,
-    #                       ff_h=12, mlp_h= 48, mlp_h2= 12, mlp_h3=6).to(device)
+    # net = Transformer_MKNBP(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
+    #                                    ff_h= 256, conv_channels = [128, 64, 32, 16, 1], seq_len = 27).to(device) 
+    # net = Transformer_SKBP(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
+    #                                    ff_h= 256, conv_channels = [128, 64, 32, 16, 1], seq_len = 27, Banddropout = 0.2).to(device)
+    # net = Transformer_MKDP(d_model = 128, d_k= 16, heads = 8, dropout=0.5, norm_shape = [27,128], num_encode = 6,
+    #                                    ff_h= 256, conv_channels = [128, 64, 32, 16, 1], seq_len = 27).to(device)
     # #net = TCN(input_size=6, output_size=1, num_channels=[72, 36, 30, 24, 18, 12, 6, 6, 3]).to(device) #T2
     # #net = TCN(input_size=6, output_size=1, num_channels=[72, 48, 36, 30, 24, 18, 12, 6, 6, 3]).to(device) 
     # net = BiLSTMModel(input_size=6, hidden_size=256, num_layers=4, output_size=1).to(device)
@@ -78,7 +74,7 @@ def main(device, save_condition, params_path, input_path):
     # net = BiGRUModel(input_size=6, hidden_size=128, num_layers=4, output_size=1).to(device)
     # net = Inception_time(in_channels=6, out_channel=32, kernel_sizes=[1, 3, 5], bottleneck_channels = 32).to(device)
     
-    #************************************************************************
+    #--------------------------------------------------------------------------------------------------
     
     
     #optimizer = torch.optim.Adam(net.parameters(), lr = 0.005)
