@@ -270,7 +270,7 @@ def Normalization3(x_feature):
 
     # Concat Feature bands and DOY
     doy_band = x_feature[:, band_num:, :]  # shape: (Batch, 1, 27)
-    doy_band = doy_band/365.0
+    doy_band = doy_band/367.0
     x_norm = torch.cat([feature_bands_norm, doy_band], dim=1)  # shape: (Batch, 7, 27)
 
     return x_norm
@@ -539,7 +539,7 @@ def get_result_revise(input_path, row, col, net, param_path, device, is_remove_b
     net.load_state_dict(state_dict, strict= False)
     
     result = net((x_norm.float()).to(device))
-    result = result*365 + first_doy.to(device)
+    result = result*367 + first_doy.to(device)
     print(result.shape, first_doy.shape)
     # result = result.squeeze(1)
     # result = torch.argmax(result, dim=1)
@@ -608,7 +608,7 @@ def get_result_revise_(input_path, row, col, net, param_path, device, is_remove_
     net.load_state_dict(state_dict, strict= False)
     
     result = net((x_norm.float()).to(device))
-    result = result*365 + first_doy.to(device)
+    result = result*367 + first_doy.to(device)
     print(result.shape, first_doy.shape)
     # result = result.squeeze(1)
     # result = torch.argmax(result, dim=1)
@@ -662,7 +662,7 @@ def get_result_revise_1(input_path, row, col, net, param_path, is_remove_band, t
     #----------------Relative DOY transform-----------------------
     
     # doy_data, FB_data = x_feature[:, 6, :], x_feature[:, :6, :]
-    # doy_data_ = doy_data/365.0
+    # doy_data_ = doy_data/367.0
     # x_feature = torch.cat([FB_data, doy_data_.unsqueeze(1)], dim = 1)    
     
     #--------------------------------------------------------------
@@ -675,9 +675,9 @@ def get_result_revise_1(input_path, row, col, net, param_path, is_remove_band, t
     net.load_state_dict(state_dict, strict= False)
     
     result = net((x_norm.float()).to(device))
-    # result = result*365 + first_doy.to(device)
+    # result = result*367 + first_doy.to(device)
     # print(result.shape, first_doy.shape)
-    result = result*365
+    result = result*367
     result = result.squeeze(1)
     # result = torch.argmax(result, dim=1)
     result = result.reshape(shape[1],shape[2]).cpu().detach().numpy()
@@ -709,7 +709,7 @@ def get_result_revise_2(input_path, row, col, net, param_path, device):
     #----------------Relative DOY transform-----------------------
     
     # doy_data, FB_data = x_feature[:, 6, :], x_feature[:, :6, :]
-    # doy_data_ = doy_data/365.0
+    # doy_data_ = doy_data/367.0
     # x_feature = torch.cat([FB_data, doy_data_.unsqueeze(1)], dim = 1)    
     
     #--------------------------------------------------------------
