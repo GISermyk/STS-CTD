@@ -56,7 +56,8 @@ class Muti_kernel_conv1d(nn.Module):
         out = self.norm(bands_dropout(out, self.dropout_ratio))
   
         return out
-    
+
+#-----------------------------learnable PE-----------------------------------------
 class STS_CTD3(nn.Module):
 
     def __init__(self, d_model, d_k, heads, dropout, norm_shape, num_encode, ff_h, conv_channels, seq_len, bandDropout):
@@ -110,5 +111,72 @@ class STS_CTD3(nn.Module):
         out = self.fc(out)
         #print('--------out shape:', out.shape)
         return out
-    
+
+#--------------------- Fixed PE -----------------------------
+class STS_CTD_withFixedPE(nn.Module):
+    """
+        Args:
+            d_model: Input feature dimension.
+            d_k: Dimension of keys/queries in attention mechanism.
+            heads: Number of attention heads.
+            dropout: Dropout rate.
+            norm_shape: Shape for layer normalization.
+            num_encode: Number of encoder layers.
+            ff_h: Hidden size of feed-forward layers.
+            conv_channels: List of integers defining the channel sizes for the multi-kernel convolutional layers.
+            seq_len: Sequence length.
+            
+    """
+    def __init__(self, d_model, d_k, heads, dropout, norm_shape, num_encode, ff_h, conv_channels, seq_len, bandDropout):
+        super(STS_CTD_withFixedPE, self).__init__()    
+
+        self.seq_len = seq_len
+        self.embedding = nn.Linear(6, d_model)
+        self.pos_encoding = DOY_PositionalEncoding(d_model= d_model)
+        self.encode_layer = EncodeBlock(d_model= d_model, d_k = d_k, heads = heads, dropout = dropout, norm_shape = norm_shape, ff_h = ff_h)
+        self.fc = nn.Linear(27, 1)
+        self.layers = nn.ModuleList([
+            EncodeBlock(d_model= d_model,
+                        d_k = d_k,
+                        heads = heads,
+                        dropout = dropout,
+                        norm_shape = norm_shape,
+                        ff_h = ff_h)
+            for _ in range(num_encode)
+        ])    
+        
+        self.convlayers = []
+        for in_ch, out_ch in zip(conv_channels[:-1], conv_channels[1:]):  # Pair input and output channels
+            self.convlayers.append(Muti_kernel_conv1d(in_ch, out_ch, bandDropout))
+            self.convlayers.append(nn.GELU())
+        self.Mk_conv1d =  nn.Sequential(*self.convlayers)
+
+    def forward(self, X):
+        
+        # X.Shape : batch, d_model, seq_len (B, 7, d_model) -->Include: Feature Bands (B , 6, d_model) and DOY (B , 1, d_model)
+        
+        #X : batch, d_model, seq_len  ---># X : batch, seq_len, d_model
+        X = X.permute(0, 2, 1)
+        DOY, FBs = X[:, : ,6], X[:, :, :6]
+        
+        #X : batch, seq_len, d_model
+        X = self.embedding(FBs)
+        #print('------X.shape', X.shape)
+        X = X + self.pos_encoding(DOY)
+
+        for layer in self.layers:
+            X = layer(X)
+ 
+        #X --->:(batch, d_model, seq_len)
+        X = X.permute(0,2,1)
+
+        # multi_kernel 
+        X = self.Mk_conv1d(X)
+        #X = self.k(X)
+        out  = X.permute(0, 2, 1).squeeze(-1)
+        #print('--------out shape:', out.shape)
+        out = self.fc(out)
+        #print('--------out shape:', out.shape)
+        return out
+
     
