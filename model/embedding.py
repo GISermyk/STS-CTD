@@ -26,7 +26,7 @@ class TokenEmbedding(nn.Module):
         
 class PositionalEncoding(nn.Module):
     """位置编码"""
-    def __init__(self, d_model, max_len=100):
+    def __init__(self, d_model, max_len=200):
         super(PositionalEncoding, self).__init__()
         #self.dropout = nn.Dropout(dropout)
         
@@ -45,50 +45,27 @@ class PositionalEncoding(nn.Module):
         X = self.P[:, :X.shape[1]].to(device)
         return  X
 
-class DataEmbedding(nn.Module):
+class DOY_PositionalEncoding(nn.Module):
+    """DOY 位置编码"""
+    def __init__(self, d_model):
+        super(DOY_PositionalEncoding, self).__init__()
+        
+        self.num_hiddens = d_model
+        
+        Scaled_doy_values = torch.arange(1, 366, dtype=torch.float32, device=device).reshape(-1, 1) / 365.0
+        X_pe = Scaled_doy_values / torch.pow(10000, torch.arange(0, self.num_hiddens, 2, dtype=torch.float32, device=device) / self.num_hiddens)
+        
+        self.P = torch.zeros((1, 365, self.num_hiddens), device=device)
+        self.P[:, :, 0::2] = torch.sin(X_pe)
+        self.P[:, :, 1::2] = torch.cos(X_pe)
+
+    def forward(self, X):
+        #print("---------------XSHAPE:------------",X.shape) #torch.Size([512, 27])
+        # X.shape: (Batch, Seq_len, 1) -> squeeze(-1) -> (Batch, Seq_len)
+        X = X.squeeze(-1).long()  # 确保 X 是整数索引
+        #print("---------------XSHAPE:------------",X.shape)
+        PE = self.P[:, X].squeeze(0).to(device)  # 确保 PE 在同一设备上  #PE: Batch,, Seq, model
+        #print('----------PE.shape-----------:', PE.shape)
+        return PE
+
     
-    def __init__(self, c_in, d_model, dropout= 0.3):
-        
-        super(DataEmbedding, self).__init__()
-        
-        self.value_embedding = TokenEmbedding(c_in=c_in, d_model=d_model)
-        self.position_embeddding = PositionalEncoding(d_model= d_model)
-        self.dropout = nn.Dropout(p = dropout)
-        
-    def forward(self, x):
-        
-        x = self.value_embedding(x) + self.position_embeddding(x)
-        return self.dropout(x)
-    
-    
-# x = torch.randn(10,8,7)
-
-# k = DataEmbedding(7,6)
-# xx =k(x)
-# print(xx.shape)
-
-#x = torch.randn(10, 6, 4)  # batch, seq_len, dim
-
-# class PositionalEmbedding(nn.Module):
-
-#     def __init__(self, d_model, max_len = 100):
-#         super(PositionalEmbedding, self).__init__()
-        
-#         pe = torch.zeros(max_len, d_model).float()
-#         pe.requires_grad =False
-#         self.d_model = d_model + (d_model % 2)*1 
-        
-#         position = torch.arange(0, max_len).float().unsqueeze(1) # shape: [max_len, 1]
-#         div_term = (torch.arange(0, self.d_model, 2).float() 
-#                     * -(math.log(10000.0) / self.d_model)).exp()
-        
-#         pe[:, 0::2] = torch.sin(position * div_term)
-#         pe[:, 1::2] = torch.cos(position * div_term)
-#         self.P = self.P[:, :, 0:(self.P.shape[2] -(num_hiddens % 2)*1) ]
-        
-#         pe = pe.unsqueeze(0) # shape :[1, max_len, 1]
-#         self.register_buffer('pe', pe)
-        
-#     def forward(self, x): 
-#         #x.shape[1] mean max_seqence length
-#         return self.pe[:,:x.shape[1]]
