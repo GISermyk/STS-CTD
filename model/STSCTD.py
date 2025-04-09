@@ -112,7 +112,7 @@ class STS_CTD3(nn.Module):
         #print('--------out shape:', out.shape)
         return out
 
-#--------------------- Fixed PE -----------------------------
+#---------------------------------- Fixed PE ------------------------------------------
 class STS_CTD_withFixedPE(nn.Module):
     """
         Args:
