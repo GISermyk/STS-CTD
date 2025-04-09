@@ -65,7 +65,7 @@ class STS_CTD3(nn.Module):
 
         self.seq_len = seq_len
         self.embedding = nn.Linear(7, d_model)
-        self.pos_encoding = nn.Parameter(torch.randn(1, 27, d_model))  # Learnable PE
+        self.pos_embedding = nn.Parameter(torch.randn(1, 27, d_model))  # Learnable PE
         # self.pos_encoding = PositionalEncoding(d_model= d_model)
         self.encode_layer = EncodeBlock(d_model= d_model, d_k = d_k, heads = heads, dropout = dropout, norm_shape = norm_shape, ff_h = ff_h)
         #self.fc = torch.nn.Linear(seq_len, 1)
@@ -95,7 +95,7 @@ class STS_CTD3(nn.Module):
   
         X = self.embedding(X)
         #print('------X.shape', X.shape)
-        X = X + self.pos_encoding
+        X = X + self.pos_embedding
 
         for layer in self.layers:
             X = layer(X)
