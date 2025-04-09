@@ -58,6 +58,19 @@ class Muti_kernel_conv1d(nn.Module):
         return out
     
 class STS_CTD3(nn.Module):
+    """
+        Args:
+            d_model: Input feature dimension.
+            d_k: Dimension of keys/queries in attention mechanism.
+            heads: Number of attention heads.
+            dropout: Dropout rate.
+            norm_shape: Shape for layer normalization.
+            num_encode: Number of encoder layers.
+            ff_h: Hidden size of feed-forward layers.
+            conv_channels: List of integers defining the channel sizes for the multi-kernel convolutional layers.
+            seq_len: Sequence length.
+            
+    """
 
     def __init__(self, d_model, d_k, heads, dropout, norm_shape, num_encode, ff_h, conv_channels, seq_len, bandDropout):
         super(STS_CTD3, self).__init__()    
