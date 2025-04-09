@@ -52,10 +52,10 @@ class DOY_PositionalEncoding(nn.Module):
         
         self.num_hiddens = d_model
         
-        Scaled_doy_values = torch.arange(1, 366, dtype=torch.float32, device=device).reshape(-1, 1) / 365.0
+        Scaled_doy_values = torch.arange(1, 367, dtype=torch.float32, device=device).reshape(-1, 1) / 367.0
         X_pe = Scaled_doy_values / torch.pow(10000, torch.arange(0, self.num_hiddens, 2, dtype=torch.float32, device=device) / self.num_hiddens)
         
-        self.P = torch.zeros((1, 365, self.num_hiddens), device=device)
+        self.P = torch.zeros((1, 367, self.num_hiddens), device=device)
         self.P[:, :, 0::2] = torch.sin(X_pe)
         self.P[:, :, 1::2] = torch.cos(X_pe)
 
