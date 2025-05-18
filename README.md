@@ -1,5 +1,6 @@
 
-Monitoring Spartina Alterniflora removal dynamics across coastal China using time series Sentinel-1 imagery
+Yukui Min, Yinghai Ke, Zhaojun Zhuo, Weichun Qi, Jinyuan Li, Peng Li, Nana Zhao,Monitoring Spartina Alterniflora removal dynamics across coastal China using time series Sentinel-1 imagery,Remote Sensing of Environment, Volume 326,2025,114813,ISSN 0034-4257,
+https://doi.org/10.1016/j.rse.2025.114813.
 
 You can run Run_result.py to visualize the output of the STS-CTD model. The trained model is saved under the model_data folder. Please note that this model parameters is only valid in the research area specified in the paper.
 
