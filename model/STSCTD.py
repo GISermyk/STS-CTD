@@ -67,7 +67,7 @@ class STS_CTD3(nn.Module):
             heads: Number of attention heads.
             dropout: Dropout rate.
             norm_shape: Shape for layer normalization.
-            num_encode: Number of encoder layers.
+            num_encoder: Number of encoder layers.
             ff_h: Hidden size of feed-forward layers.
             conv_channels: List of integers defining the channel sizes for the multi-kernel convolutional layers.
             seq_len: Sequence length.
