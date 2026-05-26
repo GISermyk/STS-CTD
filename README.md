@@ -1,4 +1,6 @@
 
+## Monitoring Spartina Alterniflora removal dynamics across coastal China using time series Sentinel-1 imagery
+
 Citation: Yukui Min, Yinghai Ke, Zhaojun Zhuo, Weichun Qi, Jinyuan Li, Peng Li, Nana Zhao,Monitoring Spartina Alterniflora removal dynamics across coastal China using time series Sentinel-1 imagery,Remote Sensing of Environment, Volume 326,2025,114813,ISSN 0034-4257,
 https://doi.org/10.1016/j.rse.2025.114813.
 
